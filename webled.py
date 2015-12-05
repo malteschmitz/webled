@@ -25,7 +25,7 @@ pwms = {
 }
 
 values = {
-  'white': 100,
+  'white': 0,
   'green': 0,
   'red': 0,
   'blue': 0
@@ -34,11 +34,17 @@ values = {
 for name in pwms:
   pwms[name].start(values[name])
 
-from flask import Flask, request
-app = Flask(__name__)
+from flask import Flask, request, url_for, redirect
+app = Flask(__name__, static_url_path='')
+
+@app.route("/", methods=['GET'])
+def index():
+  return redirect(url_for('static', filename='index.html'))
 
 @app.route("/<name>", methods=['GET'])
 def read(name):
+  if name == 'index.html':
+    return app.send_static_file('index.html')
   if name in pwms:
     return str(values[name])
   return "Not found", 404

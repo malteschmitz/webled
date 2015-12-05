@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Web LEDs</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <style type="text/css">
+  #red, #green, #blue, #white {
+    width: 300px;
+    margin: 15px;
+  }
+  #red .ui-slider-range { background: #ef2929; }
+  #green .ui-slider-range { background: #8ae234; }
+  #blue .ui-slider-range { background: #729fcf; }
+  </style>
+  <script>
+  $(function() {
+    function send(name, value) {
+      $.ajax('/' + name, {
+        method: 'put',
+        data: value.toString(),
+        'processData': false,
+        'contentType': 'text/plain'});
+    }
+
+    $("#red, #green, #blue, #white").slider({
+      orientation: "horizontal",
+      range: "min",
+      max: 100,
+      value: 0
+    });
+    ['red', 'green', 'blue', 'white'].forEach(function(name) {
+      function sendName (event, ui) {
+        send(name, ui.value);
+      }
+      $('#' + name).slider({
+        change: sendName,
+        slide: sendName
+      })
+    });
+  });
+  </script>
+</head>
+<body>
+
+<h1>Web LEDs</h1>
+
+<h2>Weiß</h2>
+<div id="white"></div>  
+
+<h2>Rot</h2>
+<div id="red"></div>
+
+<h2>Grün</h2>
+<div id="green"></div>
+
+<h2>Blau</h2>
+<div id="blue"></div>
+ 
+</body>
+</html>
